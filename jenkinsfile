@@ -1,0 +1,29 @@
+ 	pipeline {
+ 	    agent { label 'Java' }
+ 	    stages { 
+ 	        stage ("SCM Checkin-1") {
+ 	            steps {
+ 	              git branch: 'master', url: 'https://github.com/<<samplemaven repo link'
+ 	            }
+ 	        }
+ 	        stage ("maven build") {
+ 	            tools {
+ 	                maven 'maven-3.6.2'
+ 	                jdk 'JDK1.8'
+ 	            }
+ 	            steps {
+ 	                sh "mvn package"
+ 	            }
+ 	        }
+ 	stage ("Build the Docker Image") {
+ 	            steps {
+ 	                sh "docker build . -t <<docker.hub.id>>/tomcat-1"
+ 	            }
+ 	        }
+ 	stage ("Run the Container") {
+ 	            steps {
+ 	                sh "docker run -d -p 90:8080 --name cont01 <<docker.hub.id>>/tomcat-1"
+ 	            }
+ 	        }
+ 	}
+}
